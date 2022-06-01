@@ -10,6 +10,7 @@
 #include "adc.h"
 #include "myprintf.h"
 #include "tim.h"
+#include "key.h"
 
 void MX_FREERTOS_Init(void);
 void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize);

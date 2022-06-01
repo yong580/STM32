@@ -47,6 +47,9 @@ osThreadId defaultTaskHandle;
 TaskHandle_t Task1Handle;
 TaskHandle_t UsartcontorlHandle;
 TaskHandle_t ADCHandle;
+TaskHandle_t QueueTask_Handle;
+TaskHandle_t senddataHandle;
+QueueHandle_t Queue_Handle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -54,6 +57,8 @@ void StartDefaultTask(void const *argument);
 void StartTask1(void const *argument);
 void StartUsartcontorl(void const *argument);
 void StartADCHandle(void const *argument);
+void StartQueueTask(void const *argument);
+void StartSenddata(void const *argument);
 /* USER CODE END FunctionPrototypes */
 
 /* GetIdleTaskMemory prototype (linked to static allocation support) */
@@ -81,22 +86,29 @@ void MX_FREERTOS_Init(void)
 {
   /* USER CODE BEGIN Init */
   BaseType_t xReturn = pdPASS;
-  /* USER CODE END Init */
+/* USER CODE END Init */
 
-  /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
-  /* USER CODE END RTOS_MUTEX */
+/* USER CODE BEGIN RTOS_MUTEX */
+/* add mutexes, ... */
+/* USER CODE END RTOS_MUTEX */
 
-  /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
-  /* USER CODE END RTOS_SEMAPHORES */
+/* USER CODE BEGIN RTOS_SEMAPHORES */
+/* add semaphores, ... */
+/* USER CODE END RTOS_SEMAPHORES */
 
-  /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
-  /* USER CODE END RTOS_TIMERS */
+/* USER CODE BEGIN RTOS_TIMERS */
+/* start timers, add new ones, ... */
+/* USER CODE END RTOS_TIMERS */
 
-  /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
+/* USER CODE BEGIN RTOS_QUEUES */
+/* add queues, ... */
+#define QUEUE_SIZE 10
+#define QUEUE_ITEM_SIZE sizeof(uint8_t)
+  Queue_Handle = xQueueCreate(QUEUE_SIZE, QUEUE_ITEM_SIZE);
+  if (Queue_Handle != NULL)
+  {
+    printf("Queue_Handle create success\r\n");
+  }
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
@@ -141,6 +153,24 @@ void MX_FREERTOS_Init(void)
     /* Error */
     printf("create ADCHandle ERROR\r\n");
   }
+  xReturn = xTaskCreate((TaskFunction_t)StartQueueTask,
+                        (const char *const)"Queue_send",
+                        (const uint16_t)configMINIMAL_STACK_SIZE,
+                        (void *const)NULL,
+                        (UBaseType_t)2,
+                        (TaskHandle_t *const)&QueueTask_Handle);
+  if (xReturn != pdPASS)
+  {
+    /* Error */
+    printf("create StartQueueTask ERROR\r\n");
+  }
+
+  xReturn = xTaskCreate((TaskFunction_t)StartSenddata,
+                        (const char *const)"senddata",
+                        (const uint16_t)configMINIMAL_STACK_SIZE,
+                        (void *const)NULL,
+                        (UBaseType_t)2,
+                        (TaskHandle_t *const)&senddataHandle);
   /* USER CODE END RTOS_THREADS */
 }
 
@@ -158,7 +188,7 @@ void StartDefaultTask(void const *argument)
   for (;;)
   {
     // HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
-    printf("led0\r\n");
+    // printf("led0\r\n");
     osDelay(1000);
   }
   /* USER CODE END StartDefaultTask */
@@ -173,7 +203,7 @@ void StartTask1(void const *argument)
   for (;;)
   {
     // HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
-    printf("led1\r\n");
+    // printf("led1\r\n");
     osDelay(500);
   }
   /* USER CODE END StartTask1 */
@@ -203,17 +233,57 @@ void StartADCHandle(void const *argument)
   /* Infinite loop */
   for (;;)
   {
-    printf("adc start\r\n");
+    // printf("adc start\r\n");
     extern uint8_t adc_flag;
     if (adc_flag == 1)
     {
-      printf("\r\nADC_ConvertedValue = 0x%ld \r\n", ADC_ConvertedValue);
+      // printf("\r\nADC_ConvertedValue = 0x%ld \r\n", ADC_ConvertedValue);
       ADC_val = (float)ADC_ConvertedValue / 4095 * (float)3.3;
-      
-      ftprintf(ADC_val, 2);
+
+      // ftprintf(ADC_val, 2);
       adc_flag = 0;
     }
     vTaskDelay(500);
   }
 }
+
+void StartQueueTask(void const *argument)
+{
+  /* USER CODE BEGIN StartQueue_sendrecvHandle */
+  /* Infinite loop */
+  for (;;)
+  {
+    printf("receive from queue start\r\n");
+    BaseType_t xReturn = pdPASS;
+    //用于缓存从队列收到的数据
+    uint8_t data = 0;
+    //从队列中收到数据
+    xReturn = xQueueReceive((QueueHandle_t)Queue_Handle, &data, portMAX_DELAY);
+    if (xReturn == pdPASS)
+    {
+      printf("queue recv data = %d\r\n", data);
+    }
+
+    vTaskDelay(1000);
+  }
+}
+
+void StartSenddata(void const *argument)
+{
+  /* USER CODE BEGIN StartSenddata */
+  /* Infinite loop */
+  printf("send data start\r\n");
+  uint8_t data = 0;
+  for (;;)
+  {
+    if (Key_Scan() == KEY_ON)
+    {
+      data++;
+      printf("send data = %d\r\n", data);
+      xQueueSend((QueueHandle_t)Queue_Handle, &data, portMAX_DELAY);
+      vTaskDelay(1000);
+    }
+  }
+}
+
 /* USER CODE END Application */

@@ -186,7 +186,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     time++;
     if (time == 1000)
     {
-      printf("time = %d\r\n", time);
+      // printf("time = %d\r\n", time);
       HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
       time = 0;
     }
