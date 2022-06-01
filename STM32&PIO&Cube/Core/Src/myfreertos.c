@@ -44,6 +44,7 @@
 
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
+TaskHandle_t TaskCreateHandle;
 TaskHandle_t Task1Handle;
 TaskHandle_t UsartcontorlHandle;
 TaskHandle_t ADCHandle;
@@ -54,6 +55,7 @@ QueueHandle_t Queue_Handle;
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 void StartDefaultTask(void const *argument);
+void StartTaskCreate(void const *argument);
 void StartTask1(void const *argument);
 void StartUsartcontorl(void const *argument);
 void StartADCHandle(void const *argument);
@@ -86,22 +88,22 @@ void MX_FREERTOS_Init(void)
 {
   /* USER CODE BEGIN Init */
   BaseType_t xReturn = pdPASS;
-/* USER CODE END Init */
+  /* USER CODE END Init */
 
-/* USER CODE BEGIN RTOS_MUTEX */
-/* add mutexes, ... */
-/* USER CODE END RTOS_MUTEX */
+  /* USER CODE BEGIN RTOS_MUTEX */
+  /* add mutexes, ... */
+  /* USER CODE END RTOS_MUTEX */
 
-/* USER CODE BEGIN RTOS_SEMAPHORES */
-/* add semaphores, ... */
-/* USER CODE END RTOS_SEMAPHORES */
+  /* USER CODE BEGIN RTOS_SEMAPHORES */
+  /* add semaphores, ... */
+  /* USER CODE END RTOS_SEMAPHORES */
 
-/* USER CODE BEGIN RTOS_TIMERS */
-/* start timers, add new ones, ... */
-/* USER CODE END RTOS_TIMERS */
+  /* USER CODE BEGIN RTOS_TIMERS */
+  /* start timers, add new ones, ... */
+  /* USER CODE END RTOS_TIMERS */
 
-/* USER CODE BEGIN RTOS_QUEUES */
-/* add queues, ... */
+  /* USER CODE BEGIN RTOS_QUEUES */
+  /* add queues, ... */
 #define QUEUE_SIZE 10
 #define QUEUE_ITEM_SIZE sizeof(uint8_t)
   Queue_Handle = xQueueCreate(QUEUE_SIZE, QUEUE_ITEM_SIZE);
@@ -118,59 +120,16 @@ void MX_FREERTOS_Init(void)
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-  xReturn = xTaskCreate((TaskFunction_t)StartTask1,
-                        (const char *const)"Task1",
+  xReturn = xTaskCreate((TaskFunction_t)StartTaskCreate,
+                        (const char *const)"TaskCreate",
                         (const uint16_t)configMINIMAL_STACK_SIZE,
                         (void *const)NULL,
                         (UBaseType_t)1,
-                        (TaskHandle_t *const)&Task1Handle);
-  if (xReturn != pdPASS)
+                        (TaskHandle_t *const)&TaskCreateHandle);
+  if (xReturn == pdPASS)
   {
-    /* Error */
-    printf("create Task1 ERROR\r\n");
+    printf("TaskCreate create success\r\n");
   }
-
-  xReturn = xTaskCreate((TaskFunction_t)StartUsartcontorl,
-                        (const char *const)"Usartcontorl",
-                        (const uint16_t)configMINIMAL_STACK_SIZE,
-                        (void *const)NULL,
-                        (UBaseType_t)2,
-                        (TaskHandle_t *const)&UsartcontorlHandle);
-
-  if (xReturn != pdPASS)
-  {
-    /* Error */
-    printf("create Usartcontorl ERROR\r\n");
-  }
-  xReturn = xTaskCreate((TaskFunction_t)StartADCHandle,
-                        (const char *const)"ADCHandle",
-                        (const uint16_t)configMINIMAL_STACK_SIZE,
-                        (void *const)NULL,
-                        (UBaseType_t)3,
-                        (TaskHandle_t *const)&ADCHandle);
-  if (xReturn != pdPASS)
-  {
-    /* Error */
-    printf("create ADCHandle ERROR\r\n");
-  }
-  xReturn = xTaskCreate((TaskFunction_t)StartQueueTask,
-                        (const char *const)"Queue_send",
-                        (const uint16_t)configMINIMAL_STACK_SIZE,
-                        (void *const)NULL,
-                        (UBaseType_t)2,
-                        (TaskHandle_t *const)&QueueTask_Handle);
-  if (xReturn != pdPASS)
-  {
-    /* Error */
-    printf("create StartQueueTask ERROR\r\n");
-  }
-
-  xReturn = xTaskCreate((TaskFunction_t)StartSenddata,
-                        (const char *const)"senddata",
-                        (const uint16_t)configMINIMAL_STACK_SIZE,
-                        (void *const)NULL,
-                        (UBaseType_t)2,
-                        (TaskHandle_t *const)&senddataHandle);
   /* USER CODE END RTOS_THREADS */
 }
 
@@ -196,6 +155,74 @@ void StartDefaultTask(void const *argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+void StartTaskCreate(void const *argument)
+{
+  BaseType_t xReturn = pdPASS;
+  taskENTER_CRITICAL();
+  {
+    xReturn = xTaskCreate((TaskFunction_t)StartTask1,
+                          (const char *const)"Task1",
+                          (const uint16_t)configMINIMAL_STACK_SIZE,
+                          (void *const)NULL,
+                          (UBaseType_t)1,
+                          (TaskHandle_t *const)&Task1Handle);
+    if (xReturn != pdPASS)
+    {
+      /* Error */
+      printf("create Task1 ERROR\r\n");
+    }
+
+    xReturn = xTaskCreate((TaskFunction_t)StartUsartcontorl,
+                          (const char *const)"Usartcontorl",
+                          (const uint16_t)configMINIMAL_STACK_SIZE,
+                          (void *const)NULL,
+                          (UBaseType_t)2,
+                          (TaskHandle_t *const)&UsartcontorlHandle);
+
+    if (xReturn != pdPASS)
+    {
+      /* Error */
+      printf("create Usartcontorl ERROR\r\n");
+    }
+    xReturn = xTaskCreate((TaskFunction_t)StartADCHandle,
+                          (const char *const)"ADCHandle",
+                          (const uint16_t)configMINIMAL_STACK_SIZE,
+                          (void *const)NULL,
+                          (UBaseType_t)3,
+                          (TaskHandle_t *const)&ADCHandle);
+    if (xReturn != pdPASS)
+    {
+      /* Error */
+      printf("create ADCHandle ERROR\r\n");
+    }
+    xReturn = xTaskCreate((TaskFunction_t)StartQueueTask,
+                          (const char *const)"Queue_send",
+                          (const uint16_t)configMINIMAL_STACK_SIZE,
+                          (void *const)NULL,
+                          (UBaseType_t)2,
+                          (TaskHandle_t *const)&QueueTask_Handle);
+    if (xReturn != pdPASS)
+    {
+      /* Error */
+      printf("create StartQueueTask ERROR\r\n");
+    }
+
+    xReturn = xTaskCreate((TaskFunction_t)StartSenddata,
+                          (const char *const)"senddata",
+                          (const uint16_t)configMINIMAL_STACK_SIZE,
+                          (void *const)NULL,
+                          (UBaseType_t)2,
+                          (TaskHandle_t *const)&senddataHandle);
+    if (xReturn != pdPASS)
+    {
+      /* Error */
+      printf("create StartSenddata ERROR\r\n");
+    }
+  }
+  taskEXIT_CRITICAL();
+  vTaskDelete(NULL);
+}
+
 void StartTask1(void const *argument)
 {
   /* USER CODE BEGIN StartTask1 */
