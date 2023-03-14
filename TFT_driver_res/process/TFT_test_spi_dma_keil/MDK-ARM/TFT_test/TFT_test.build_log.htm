@@ -1,0 +1,103 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.33.0.0
+Copyright (C) 2020 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: 1 yong, HP Inc., LIC=SDA0P-MTZ8S-2ZJW4-FXBV7-Y8SH4-8IFSC
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Plus  Version: 5.33.0.0
+Toolchain Path:  D:\soft\32soft\keil5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 7 (build 960)
+Assembler:       Armasm.exe V5.06 update 7 (build 960)
+Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
+Library Manager: ArmAr.exe V5.06 update 7 (build 960)
+Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
+CPU DLL:         SARMCM3.DLL V5.33.0.0
+Dialog DLL:      DCM.DLL V1.17.3.0
+Target DLL:      CMSIS_AGDI.dll V1.32.12.0
+Dialog DLL:      TCM.DLL V1.48.0.0
+ 
+<h2>Project:</h2>
+D:\workspace\git\TFT_test\TFT_test_spi_dma_keil\MDK-ARM\TFT_test.uvprojx
+Project File Date:  03/14/2023
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\soft\32soft\keil5\ARM\ARMCC\Bin'
+Rebuild target 'TFT_test'
+assembling startup_stm32f103xe.s...
+compiling tim.c...
+compiling stm32f1xx_it.c...
+compiling fonts.c...
+compiling img.c...
+../Core/Inc/img.h(2): warning:  #1-D: last line of file ends without a newline
+  extern const uint16_t gImage_picture[42960];
+..\Core\Src\img.c: 1 warning, 0 errors
+compiling dma.c...
+compiling usart.c...
+compiling spi.c...
+compiling gpio.c...
+compiling stm32f1xx_hal_msp.c...
+compiling main.c...
+../Core/Inc/img.h(2): warning:  #1-D: last line of file ends without a newline
+  extern const uint16_t gImage_picture[42960];
+../Core/Src/main.c: 1 warning, 0 errors
+compiling stm32f1xx_hal.c...
+compiling stm32f1xx_hal_gpio_ex.c...
+compiling stm32f1xx_hal_rcc_ex.c...
+compiling stm32f1xx_hal_gpio.c...
+compiling st7789.c...
+..\Core\Src\st7789.c(225): warning:  #186-D: pointless comparison of unsigned integer with zero
+    if ((x < 0) || (x >= ST7789_WIDTH) || (y < 0) || (y >= ST7789_HEIGHT)) return;
+..\Core\Src\st7789.c(225): warning:  #186-D: pointless comparison of unsigned integer with zero
+    if ((x < 0) || (x >= ST7789_WIDTH) || (y < 0) || (y >= ST7789_HEIGHT)) return;
+..\Core\Src\st7789.c(243): warning:  #186-D: pointless comparison of unsigned integer with zero
+    if ((xEnd < 0) || (xEnd >= ST7789_WIDTH) || (yEnd < 0) ||
+..\Core\Src\st7789.c(243): warning:  #186-D: pointless comparison of unsigned integer with zero
+    if ((xEnd < 0) || (xEnd >= ST7789_WIDTH) || (yEnd < 0) ||
+..\Core\Src\st7789.c: 4 warnings, 0 errors
+compiling stm32f1xx_hal_spi.c...
+compiling stm32f1xx_hal_rcc.c...
+compiling stm32f1xx_hal_dma.c...
+compiling stm32f1xx_hal_uart.c...
+compiling stm32f1xx_hal_flash.c...
+compiling stm32f1xx_hal_cortex.c...
+compiling stm32f1xx_hal_flash_ex.c...
+compiling stm32f1xx_hal_exti.c...
+compiling stm32f1xx_hal_tim.c...
+compiling stm32f1xx_hal_pwr.c...
+compiling stm32f1xx_hal_tim_ex.c...
+compiling system_stm32f1xx.c...
+linking...
+Program Size: Code=13726 RO-data=43390 RW-data=48 ZI-data=58920  
+FromELF: creating hex file...
+"TFT_test\TFT_test.axf" - 0 Error(s), 6 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.7.0.pack
+                ARM.CMSIS.5.7.0
+                CMSIS (Cortex Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.4.0
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.STM32F1xx_DFP.2.3.0.pack
+                Keil.STM32F1xx_DFP.2.3.0
+                STMicroelectronics STM32F1 Series Device Support, Drivers and Examples
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\_TFT_test
+  D:\soft\32soft\keil5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include
+  D:\soft\32soft\keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:5.4.0
+      Include file:  CMSIS\Core\Include\tz_context.h
+Build Time Elapsed:  00:00:13
+</pre>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.cjson": "jsonc",
+        "*.wxss": "css",
+        "*.wxs": "javascript",
+        "main.h": "c",
+        "img.h": "c",
+        "fonts.h": "c"
+    }
+}
